@@ -1,0 +1,9 @@
+<litepal>
+    <dbname value="weather"/>
+    <version value="1"/>
+    <list>
+        <mapping class="com.fengqi.weather.database.City"/>
+        <mapping class="com.fengqi.weather.database.Country"/>
+        <mapping class="com.fengqi.weather.database.Province"/>
+    </list>
+</litepal>
