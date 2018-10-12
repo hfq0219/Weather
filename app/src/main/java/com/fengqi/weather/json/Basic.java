@@ -2,7 +2,7 @@ package com.fengqi.weather.json;
 
 
 public class Basic {
-    public String admin_area;
+    public String parent_city;
     public String city; //地级市
     public String id; //城市对应得天气ID
     public Update update; //

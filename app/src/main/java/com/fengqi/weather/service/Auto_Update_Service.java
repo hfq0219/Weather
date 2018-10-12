@@ -2,7 +2,6 @@ package com.fengqi.weather.service;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -11,8 +10,6 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.fengqi.weather.R;
 import com.fengqi.weather.json.Weather;
@@ -51,9 +48,9 @@ public class Auto_Update_Service extends Service {
         String weatherString=prefs.getString("weather",null);
         if (weatherString!=null){
             weather= JsonUtil.handleWeatherResponse(weatherString);
-            String weatherId=weather.basic.id;
+            final String weatherId=weather.basic.id;
             String weatherUrl="http://guolin.tech/api/weather?cityid="+weatherId+
-                    "&key=bc0418b57b2d4918819d3974ac1285d9";
+                    "&key=3ea654508e9646c485c36a0346677ee6";
             HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -69,6 +66,15 @@ public class Auto_Update_Service extends Service {
                                 getDefaultSharedPreferences(Auto_Update_Service.this).edit();
                         editor.putString("weather",responseText);
                         editor.apply();
+                        Notification notification=new Notification.Builder(Auto_Update_Service.this)
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.logo))
+                                .setSmallIcon(R.mipmap.logo)
+                                .setContentTitle("天气     "+weather.basic.update.loc.split(" ")[1])
+                                .setContentText(weather.now.tmp+"℃ "+weather.now.cond.txt+
+                                        "     "+weather.basic.parent_city+"-"+weather.basic.city)
+                                .setShowWhen(false)
+                                .build();
+                        startForeground(1,notification);
                     }
                 }
             });

@@ -64,14 +64,12 @@ public class WeatherActivity extends AppCompatActivity {
         String weatherString=prefs.getString("weather",null);
         if(weatherString!=null){
             Weather weather= JsonUtil.handleWeatherResponse(weatherString);
-            showWeatherInfo(weather);
+            weatherId=weather.basic.id;
         }else{
             weatherId=getIntent().getStringExtra("weather_id");
-            weatherLayout.setVisibility(View.INVISIBLE);
-            requestWeather(weatherId);
         }
-        Intent intent=new Intent(WeatherActivity.this, Auto_Update_Service.class);
-        startService(intent);
+        weatherLayout.setVisibility(View.INVISIBLE);
+        requestWeather(weatherId);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -88,11 +86,13 @@ public class WeatherActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+        Intent i=new Intent(WeatherActivity.this, Auto_Update_Service.class);
+        startService(i);
     }
 
     public void requestWeather(final String weatherId){
         String weatherUrl="http://guolin.tech/api/weather?cityid="+weatherId+
-                "&key=bc0418b57b2d4918819d3974ac1285d9";
+                "&key=3ea654508e9646c485c36a0346677ee6";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -133,7 +133,7 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     private void showWeatherInfo(Weather weather){
-        String cityName=weather.basic.admin_area+"-"+weather.basic.city;
+        String cityName=weather.basic.parent_city+"-"+weather.basic.city;
         String updateTime=weather.basic.update.loc.split(" ")[1];
         String degree=weather.now.tmp+"℃";
         String weatherInfo=weather.now.cond.txt;

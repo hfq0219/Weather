@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.fengqi.weather.service.Auto_Update_Service;
+
 public class Main_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
